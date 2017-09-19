@@ -3,6 +3,7 @@ package com.untref.robotica.robotcontroller.interactor;
 import android.bluetooth.BluetoothDevice;
 
 import com.untref.robotica.robotcontroller.data.client.BluetoothClient;
+import com.untref.robotica.robotcontroller.repository.DevicesRepository;
 
 import java.util.List;
 
@@ -30,5 +31,9 @@ public class DevicesInteractor {
 
     public List<BluetoothDevice> getBoundedDevices() {
         return bluetoothClient.getBoundedDevices();
+    }
+
+    public void connectToPairDevice(BluetoothDevice device) {
+        bluetoothClient.connectToPairDevice(device);
     }
 }

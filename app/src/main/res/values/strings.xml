@@ -6,4 +6,5 @@
     <string name="text_scan_bluetooth">Scan</string>
     <string name="text_pair">Pair</string>
     <string name="text_connect">Connect</string>
+    <string name="text_navigate">Navigate</string>
 </resources>

@@ -3,6 +3,7 @@ package com.untref.robotica.robotcontroller.view.fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,8 +18,9 @@ import android.widget.TextView;
 import com.untref.robotica.robotcontroller.R;
 import com.untref.robotica.robotcontroller.data.client.BluetoothClient;
 import com.untref.robotica.robotcontroller.interactor.DevicesInteractor;
-import com.untref.robotica.robotcontroller.interactor.DevicesRepository;
+import com.untref.robotica.robotcontroller.repository.DevicesRepository;
 import com.untref.robotica.robotcontroller.presenter.DevicesPresenter;
+import com.untref.robotica.robotcontroller.view.activity.NavigateActivity;
 import com.untref.robotica.robotcontroller.view.adapter.DevicesAdapter;
 
 import java.util.List;
@@ -119,6 +121,12 @@ public class DevicesFragment extends Fragment implements DevicesPresenter.View {
     @Override
     public void unPairDevice() {
         //TODO: cambiar el texto del boton a unPair
+    }
+
+    @Override
+    public void renderNavigate() {
+        Intent intent = new Intent(getActivity(), NavigateActivity.class);
+        startActivity(intent);
     }
 
 }

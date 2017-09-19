@@ -3,6 +3,7 @@ package com.untref.robotica.robotcontroller.data.client;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -17,6 +18,7 @@ import java.util.List;
 public class BluetoothClient {
 
     private BluetoothAdapter bluetoothAdapter;
+    private BluetoothSocket bluetoothSocket;
 
     public BluetoothClient(BluetoothAdapter bluetoothAdapter) {
         this.bluetoothAdapter = bluetoothAdapter;
@@ -61,5 +63,14 @@ public class BluetoothClient {
         List<BluetoothDevice> devices = new ArrayList<>();
         devices.addAll(bluetoothAdapter.getBondedDevices());
         return devices;
+    }
+
+    public void connectToPairDevice(BluetoothDevice device) {
+        bluetoothSocket = new ConnectThread(device).connect();
+    }
+
+    public void sendToBluetoothSocket(String navigateMessage) {
+        ConnectedThread connectedThread = new ConnectedThread(bluetoothSocket);
+        connectedThread.write(navigateMessage);
     }
 }

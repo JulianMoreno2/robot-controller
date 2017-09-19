@@ -4,26 +4,28 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.untref.robotica.robotcontroller.interactor.DevicesInteractor;
+import com.untref.robotica.robotcontroller.presenter.receiver.BluetoothReceiver;
+import com.untref.robotica.robotcontroller.presenter.receiver.PairReceiver;
 import com.untref.robotica.robotcontroller.view.adapter.DevicesAdapter;
 
 import java.util.List;
 
 public class DevicesPresenter extends Presenter<DevicesPresenter.View> {
 
-    private static final String TAG = "DEVICES";
-    private DevicesInteractor interactor;
+    private final DevicesInteractor devicesInteractor;
     private final DevicesAdapter devicesAdapter;
 
-    public DevicesPresenter(Context context, DevicesInteractor interactor) {
-        this.interactor = interactor;
+    private BroadcastReceiver pairReceiver;
+    private BroadcastReceiver bluetoothReceiver;
 
-        devicesAdapter = new DevicesAdapter();
+    public DevicesPresenter(Context context, DevicesInteractor devicesInteractor) {
+        this.devicesInteractor = devicesInteractor;
+
+        devicesAdapter = new DevicesAdapter(this);
 
         registerBluetoothDiscoverReceiver(context);
         registerBluetoothPairReceiver(context);
@@ -31,9 +33,9 @@ public class DevicesPresenter extends Presenter<DevicesPresenter.View> {
 
     private void registerBluetoothPairReceiver(Context context) {
         IntentFilter filter = new IntentFilter();
-
         filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
 
+        pairReceiver = new PairReceiver(this);
         context.registerReceiver(pairReceiver, filter);
     }
 
@@ -44,59 +46,17 @@ public class DevicesPresenter extends Presenter<DevicesPresenter.View> {
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 
+        bluetoothReceiver = new BluetoothReceiver(this);
         context.registerReceiver(bluetoothReceiver, filter);
     }
 
     public void onStartDiscovery() {
-        interactor.startDiscovery();
+        devicesInteractor.startDiscovery();
     }
 
-    private final BroadcastReceiver pairReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-
-            if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
-                final int state = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, BluetoothDevice.ERROR);
-                final int prevState = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, BluetoothDevice.ERROR);
-
-                if (state == BluetoothDevice.BOND_BONDED && prevState == BluetoothDevice.BOND_BONDING) {
-                    Log.d("DEVICE", "Device paired");
-                    getView().pairDevice();
-                } else if (state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED) {
-                    Log.d("DEVICE", "Device paired");
-                    getView().unPairDevice();
-                }
-            }
-            devicesAdapter.notifyDataSetChanged();
-        }
-    };
-
-    private final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            getView().showLoading();
-            String action = intent.getAction();
-
-            if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
-                Log.d(TAG, "Action: Discovery started");
-
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                Log.d(TAG, "Action: Discovery finished");
-                List<BluetoothDevice> devices = interactor.getDevices();
-                if (!devices.isEmpty()) {
-                    getView().hideLoading();
-                    devices.addAll(interactor.getBoundedDevices());
-                    getView().renderDevices(devices);
-                } else {
-                    getView().showDevicesNotFoundMessage();
-                }
-
-            } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                Log.d(TAG, "Action: Device found - " + device.getName());
-                interactor.addDevice(device);
-            }
-        }
-    };
+    public List<BluetoothDevice> getDevices() {
+        return devicesInteractor.getDevices();
+    }
 
     public RecyclerView.Adapter getDevicesAdapter() {
         return devicesAdapter;
@@ -105,6 +65,18 @@ public class DevicesPresenter extends Presenter<DevicesPresenter.View> {
     public void unregisterReceiver(Context context) {
         context.unregisterReceiver(bluetoothReceiver);
         context.unregisterReceiver(pairReceiver);
+    }
+
+    public void connectToPairDevice(BluetoothDevice device) {
+        this.devicesInteractor.connectToPairDevice(device);
+    }
+
+    public List<BluetoothDevice> getBoundedDevices() {
+        return devicesInteractor.getBoundedDevices();
+    }
+
+    public void addDevice(BluetoothDevice device) {
+        devicesInteractor.addDevice(device);
     }
 
     public interface View extends Presenter.View {
@@ -120,5 +92,7 @@ public class DevicesPresenter extends Presenter<DevicesPresenter.View> {
         void pairDevice();
 
         void unPairDevice();
+
+        void renderNavigate();
     }
 }

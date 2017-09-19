@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.untref.robotica.robotcontroller.R;
+import com.untref.robotica.robotcontroller.presenter.DevicesPresenter;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -21,8 +22,10 @@ import butterknife.ButterKnife;
 public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.DevicesViewHolder> {
 
     private List<BluetoothDevice> devices;
+    private DevicesPresenter devicesPresenter;
 
-    public DevicesAdapter() {
+    public DevicesAdapter(DevicesPresenter devicesPresenter) {
+        this.devicesPresenter = devicesPresenter;
         devices = new ArrayList<>();
     }
 
@@ -51,7 +54,13 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.DevicesV
                 Log.d("DEVICE", "Pairing device");
                 holder.btnPair.setText("Unpair");
                 pairDevice(device);
+                holder.btnConnect.setVisibility(View.VISIBLE);
             }
+        });
+
+        holder.btnConnect.setOnClickListener(v -> {
+                devicesPresenter.connectToPairDevice(holder.device);
+                devicesPresenter.getView().renderNavigate();
         });
     }
 
@@ -93,6 +102,9 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.DevicesV
 
         @BindView(R.id.btn_pair)
         Button btnPair;
+
+        @BindView(R.id.btn_connect)
+        Button btnConnect;
 
         BluetoothDevice device;
 
