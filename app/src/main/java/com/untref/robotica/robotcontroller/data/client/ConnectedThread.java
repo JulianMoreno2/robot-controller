@@ -9,7 +9,7 @@ public class ConnectedThread extends Thread {
 
     private final OutputStream outputStream;
 
-    public ConnectedThread(BluetoothSocket socket) {
+    public ConnectedThread(BluetoothConnector.BluetoothSocketWrapper socket) {
 
         OutputStream tmpOut = null;
 

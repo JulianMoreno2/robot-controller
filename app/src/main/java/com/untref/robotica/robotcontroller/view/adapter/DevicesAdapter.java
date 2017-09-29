@@ -48,13 +48,14 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.DevicesV
             if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
                 //FIXME: El estado de device no cambia por lo que nunca se desvincula
                 Log.d("DEVICE", "Unpairing device");
-                holder.btnPair.setText("Unpair");
+                holder.btnPair.setText("Pair");
                 unpairDevice(device);
             } else {
                 Log.d("DEVICE", "Pairing device");
                 holder.btnPair.setText("Unpair");
                 pairDevice(device);
                 holder.btnConnect.setVisibility(View.VISIBLE);
+                holder.btnConnect.setEnabled(true);
             }
         });
 

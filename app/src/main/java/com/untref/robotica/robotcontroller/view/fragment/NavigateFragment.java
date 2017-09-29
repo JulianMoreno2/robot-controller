@@ -50,7 +50,7 @@ public class NavigateFragment extends Fragment implements NavigatePresenter.View
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_devices, container, false);
+        return inflater.inflate(R.layout.fragment_navigate, container, false);
     }
 
     @Override

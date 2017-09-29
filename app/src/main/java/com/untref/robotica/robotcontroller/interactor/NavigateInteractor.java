@@ -1,5 +1,7 @@
 package com.untref.robotica.robotcontroller.interactor;
 
+import android.util.Log;
+
 import com.untref.robotica.robotcontroller.data.client.BluetoothClient;
 
 
@@ -12,7 +14,8 @@ public class NavigateInteractor {
     }
 
     public void navigate() {
-        String navigateMessage = "*1*";
+        String navigateMessage = "*01*";
+        Log.d("DEVICE", navigateMessage);
         bluetoothClient.sendToBluetoothSocket(navigateMessage);
     }
 }

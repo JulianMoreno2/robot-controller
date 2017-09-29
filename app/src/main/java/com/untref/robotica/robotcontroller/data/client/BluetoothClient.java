@@ -12,13 +12,14 @@ import android.support.v4.content.ContextCompat;
 
 import com.untref.robotica.robotcontroller.view.activity.HomeActivity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BluetoothClient {
 
     private BluetoothAdapter bluetoothAdapter;
-    private BluetoothSocket bluetoothSocket;
+    private BluetoothConnector.BluetoothSocketWrapper bluetoothSocket;
 
     public BluetoothClient(BluetoothAdapter bluetoothAdapter) {
         this.bluetoothAdapter = bluetoothAdapter;
@@ -66,7 +67,11 @@ public class BluetoothClient {
     }
 
     public void connectToPairDevice(BluetoothDevice device) {
-        bluetoothSocket = new ConnectThread(device).connect();
+        try {
+            bluetoothSocket = new BluetoothConnector(device, bluetoothAdapter).connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendToBluetoothSocket(String navigateMessage) {
