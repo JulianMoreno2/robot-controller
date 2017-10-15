@@ -3,6 +3,7 @@ package com.untref.robotica.robotcontroller.data.client;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Build;
 import android.util.Log;
 
 import java.io.IOException;
@@ -16,60 +17,51 @@ public class BluetoothConnector {
     private UUID uuid;
     private BluetoothSocketWrapper bluetoothSocket;
     private final BluetoothDevice device;
-    private final BluetoothAdapter adapter;
-    private int candidate;
+    private final BluetoothAdapter bluetoothAdapter;
 
-    /**
-     * @param device  the device
-     * @param adapter the Android BT adapter
-     */
-    public BluetoothConnector(BluetoothDevice device, BluetoothAdapter adapter) {
+    public BluetoothConnector(BluetoothDevice device, BluetoothAdapter bluetoothAdapter) {
         this.device = device;
-        this.adapter = adapter;
+        this.bluetoothAdapter = bluetoothAdapter;
         this.uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     }
 
     public BluetoothSocketWrapper connect() throws IOException {
-        boolean success = false;
-        while (selectSocket()) {
-            adapter.cancelDiscovery();
+        BluetoothSocket tmp = createBluetoothSocketVersion();
+        bluetoothSocket = new NativeBluetoothSocket(tmp);
+        bluetoothAdapter.cancelDiscovery();
 
+        try {
+            Log.d("DEVICE", "Connect Native Bluetooth Socket");
+            bluetoothSocket.connect();
+        } catch (IOException e) {
             try {
+                bluetoothSocket = new FallbackBluetoothSocket(bluetoothSocket.getUnderlyingSocket());
+                Thread.sleep(500);
+                Log.d("DEVICE", "Fallback Bluetooth Socket");
                 bluetoothSocket.connect();
-                success = true;
-                break;
-            } catch (IOException e) {
-                //try the fallback
-                try {
-                    bluetoothSocket = new FallbackBluetoothSocket(bluetoothSocket.getUnderlyingSocket());
-                    Thread.sleep(500);
-                    bluetoothSocket.connect();
-                    success = true;
-                    break;
-                } catch (FallbackException e1) {
-                    Log.w("DEVICE", "Could not initialize FallbackBluetoothSocket classes.", e);
-                } catch (InterruptedException e1) {
-                    Log.w("DEVICE", e1.getMessage(), e1);
-                } catch (IOException e1) {
-                    Log.w("DEVICE", "Fallback failed. Cancelling.", e1);
-                }
+            } catch (FallbackException e1) {
+                Log.w("DEVICE", "Could not initialize FallbackBluetoothSocket classes.", e);
+            } catch (InterruptedException e1) {
+                Log.w("DEVICE", e1.getMessage(), e1);
+            } catch (IOException e1) {
+                Log.w("DEVICE", "Fallback failed. Cancelling.", e1);
             }
-        }
-
-        if (!success) {
-            throw new IOException("Could not connect to device: " + device.getAddress());
         }
 
         return bluetoothSocket;
     }
 
-    private boolean selectSocket() throws IOException {
-        Log.i("DEVICE", "Attempting to connect to Protocol: " + uuid);
-
-        BluetoothSocket tmp;
-        tmp = device.createInsecureRfcommSocketToServiceRecord(uuid);
-        bluetoothSocket = new NativeBluetoothSocket(tmp);
-        return true;
+    private BluetoothSocket createBluetoothSocketVersion() throws IOException {
+        if(Build.VERSION.SDK_INT >= 10){
+            try {
+                final Method m = device.getClass()
+                        .getMethod("createInsecureRfcommSocketToServiceRecord", new Class[] { UUID.class });
+                return (BluetoothSocket) m.invoke(device, uuid);
+            } catch (Exception e) {
+                Log.e("DEVICE", "Could not create Insecure RFComm Connection",e);
+            }
+        }
+        return  device.createRfcommSocketToServiceRecord(uuid);
     }
 
     public static interface BluetoothSocketWrapper {
@@ -143,11 +135,12 @@ public class BluetoothConnector {
         public FallbackBluetoothSocket(BluetoothSocket tmp) throws FallbackException {
             super(tmp);
             try {
-                Class<?> clazz = tmp.getRemoteDevice().getClass();
-                Class<?>[] paramTypes = new Class<?>[]{Integer.TYPE};
-                Method m = clazz.getMethod("createRfcommSocket", paramTypes);
-                Object[] params = new Object[]{Integer.valueOf(1)};
-                fallbackSocket = (BluetoothSocket) m.invoke(tmp.getRemoteDevice(), params);
+                fallbackSocket =(BluetoothSocket) device.getClass()
+                        .getMethod("createRfcommSocket", new Class[] {int.class}).invoke(device,1);
+                //Class<?> clazz = tmp.getRemoteDevice().getClass();
+                //Class<?>[] paramTypes = new Class<?>[]{Integer.TYPE};
+                //Method m = clazz.getMethod("createRfcommSocket", paramTypes);
+                //fallbackSocket = (BluetoothSocket) m.invoke(tmp.getRemoteDevice(), 1);
             } catch (Exception e) {
                 throw new FallbackException(e);
             }
@@ -163,18 +156,15 @@ public class BluetoothConnector {
             return fallbackSocket.getOutputStream();
         }
 
-
         @Override
         public void connect() throws IOException {
             fallbackSocket.connect();
         }
 
-
         @Override
         public void close() throws IOException {
             fallbackSocket.close();
         }
-
     }
 
     public static class FallbackException extends Exception {
