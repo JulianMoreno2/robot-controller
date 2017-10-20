@@ -15,7 +15,6 @@ public class NavigateInteractor {
 
     public void navigate() {
         String navigateMessage = "*01*";
-        Log.d("DEVICE", navigateMessage);
         bluetoothClient.sendToBluetoothSocket(navigateMessage);
     }
 }

@@ -3,23 +3,25 @@ package com.untref.robotica.robotcontroller.data.client;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
+import com.untref.robotica.robotcontroller.data.client.socket.BluetoothConnector;
+import com.untref.robotica.robotcontroller.data.client.socket.BluetoothSocketWrapper;
 import com.untref.robotica.robotcontroller.view.activity.HomeActivity;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BluetoothClient {
 
     private BluetoothAdapter bluetoothAdapter;
-    private BluetoothConnector.BluetoothSocketWrapper bluetoothSocket;
+    private BluetoothSocketWrapper bluetoothSocket;
+    private BluetoothConnector bluetoothConnector;
 
     public BluetoothClient(BluetoothAdapter bluetoothAdapter) {
         this.bluetoothAdapter = bluetoothAdapter;
@@ -67,15 +69,18 @@ public class BluetoothClient {
     }
 
     public void connectToPairDevice(BluetoothDevice device) {
-        try {
-            bluetoothSocket = new BluetoothConnector(device, bluetoothAdapter).connect();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        bluetoothConnector = BluetoothConnector.create(bluetoothAdapter, device);
+        bluetoothConnector.connect();
     }
 
     public void sendToBluetoothSocket(String navigateMessage) {
-        ConnectedThread connectedThread = new ConnectedThread(bluetoothSocket);
-        connectedThread.write(navigateMessage);
+        Log.d("DEVICE", "Navigating");
+        BluetoothConnector instance = BluetoothConnector.getInstance();
+        if(instance.isConnected()) {
+            Log.d("DEVICE", "Send -> " + navigateMessage);
+            instance.send(navigateMessage);
+        } else {
+            Log.d("DEVICE", "Bluetooth is disconnected");
+        }
     }
 }

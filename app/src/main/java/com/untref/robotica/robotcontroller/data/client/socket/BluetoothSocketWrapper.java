@@ -1,8 +1,25 @@
 package com.untref.robotica.robotcontroller.data.client.socket;
 
-/**
- * Created by INSPIRON on 12/10/2017.
- */
+import android.bluetooth.BluetoothSocket;
 
-public class BluetoothSocketWrapper {
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+public interface BluetoothSocketWrapper {
+
+    InputStream getInputStream() throws IOException;
+
+    OutputStream getOutputStream() throws IOException;
+
+    String getRemoteDeviceName();
+
+    void connect() throws IOException;
+
+    String getRemoteDeviceAddress();
+
+    void close() throws IOException;
+
+    BluetoothSocket getUnderlyingSocket();
+
 }
