@@ -8,7 +8,7 @@
     >
 
   <fragment
-      class="com.untref.robotica.robotcontroller.view.fragment.NavigateFragment"
+      class="com.untref.robotica.robotcontroller.presentation.view.fragment.NavigateFragment"
       android:id="@+id/navigate_fragment"
       android:layout_width="match_parent"
       android:layout_height="match_parent"

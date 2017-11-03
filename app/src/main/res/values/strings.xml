@@ -7,4 +7,6 @@
     <string name="text_pair">Pair</string>
     <string name="text_connect">Connect</string>
     <string name="text_navigate">Navigate</string>
+    <string name="text_stop">Stop</string>
+    <string name="text_disconnect">Disconnect</string>
 </resources>

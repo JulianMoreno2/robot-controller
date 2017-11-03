@@ -14,16 +14,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppTheme.RobotController">
-        <activity android:name=".view.activity.HomeActivity">
+        <activity android:name=".presentation.view.activity.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.DevicesActivity">
+        <activity android:name=".presentation.view.activity.DevicesActivity">
         </activity>
-        <activity android:name=".view.activity.NavigateActivity">
+        <activity android:name=".presentation.view.activity.NavigateActivity">
         </activity>
     </application>
 

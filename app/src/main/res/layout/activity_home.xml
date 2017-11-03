@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.untref.robotica.robotcontroller.view.activity.DevicesActivity">
+    tools:context=".presentation.view.activity.DevicesActivity">
 
     <fragment
-        class="com.untref.robotica.robotcontroller.view.fragment.HomeFragment"
+        class="com.untref.robotica.robotcontroller.presentation.view.fragment.HomeFragment"
         android:id="@+id/home_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
