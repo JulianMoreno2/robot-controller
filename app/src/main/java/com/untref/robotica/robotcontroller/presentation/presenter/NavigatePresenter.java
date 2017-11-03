@@ -2,12 +2,16 @@ package com.untref.robotica.robotcontroller.presentation.presenter;
 
 import com.untref.robotica.robotcontroller.core.interactor.NavigateInteractor;
 
+import io.reactivex.subjects.PublishSubject;
+
 public class NavigatePresenter extends Presenter<NavigatePresenter.View> {
 
     private NavigateInteractor navigateInteractor;
+    private PublishSubject<String> subject;
 
-    public NavigatePresenter(NavigateInteractor navigateInteractor) {
+    public NavigatePresenter(NavigateInteractor navigateInteractor, PublishSubject<String> subject) {
         this.navigateInteractor = navigateInteractor;
+        this.subject = subject;
     }
 
     public void sendNavigate() {
@@ -24,9 +28,15 @@ public class NavigatePresenter extends Presenter<NavigatePresenter.View> {
         getView().goToDevicesFragment();
     }
 
+    public void readFromBluetooth() {
+        subject.subscribe(message -> getView().writeIncommingMessage(message));
+    }
+
     public interface View extends Presenter.View {
         void disableNavigate();
 
         void goToDevicesFragment();
+
+        void writeIncommingMessage(String message);
     }
 }

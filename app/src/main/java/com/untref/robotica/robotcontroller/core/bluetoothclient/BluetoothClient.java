@@ -6,6 +6,8 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -15,15 +17,20 @@ import com.untref.robotica.robotcontroller.presentation.view.activity.HomeActivi
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
+
+import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.PublishSubject;
 
 public class BluetoothClient {
 
     private BluetoothAdapter bluetoothAdapter;
+    private PublishSubject publishSubject;
     private BluetoothConnector bluetoothConnector;
+    private Handler handler;
 
-    public BluetoothClient(BluetoothAdapter bluetoothAdapter) {
+    public BluetoothClient(BluetoothAdapter bluetoothAdapter, PublishSubject publishSubject) {
         this.bluetoothAdapter = bluetoothAdapter;
+        this.publishSubject = publishSubject;
     }
 
     public boolean isEnabled() {
@@ -68,7 +75,15 @@ public class BluetoothClient {
     }
 
     public void connectToPairDevice(BluetoothDevice device) {
-        bluetoothConnector = BluetoothConnector.create(bluetoothAdapter, device);
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message message) {
+
+                String s = (String) message.obj;
+                publishSubject.onNext(s);
+            }
+        };
+        bluetoothConnector = BluetoothConnector.create(bluetoothAdapter, device, handler);
         bluetoothConnector.connect();
     }
 
@@ -89,5 +104,9 @@ public class BluetoothClient {
             instance.send(navigateMessage);
             instance.disconnect();
         }
+    }
+
+    public Disposable readIncommingMessages() {
+        return publishSubject.subscribe();
     }
 }

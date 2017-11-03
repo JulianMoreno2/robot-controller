@@ -3,6 +3,7 @@ package com.untref.robotica.robotcontroller.core.bluetoothclient.socket;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
 import android.os.ParcelUuid;
 import android.util.Log;
 
@@ -16,15 +17,17 @@ public class BluetoothConnector {
     private static BluetoothConnector instance;
     private final BluetoothAdapter bluetoothAdapter;
     private final BluetoothDevice device;
+    private final Handler handler;
     private BluetoothSocket socket;
     private OutputStream outputStream;
     private InputStream inputStream;
 
     private boolean connected = false;
 
-    public BluetoothConnector(BluetoothAdapter bluetoothAdapter, BluetoothDevice bluetoothDevice) {
+    public BluetoothConnector(BluetoothAdapter bluetoothAdapter, BluetoothDevice bluetoothDevice, Handler handler) {
         this.bluetoothAdapter = bluetoothAdapter;
         this.device = bluetoothDevice;
+        this.handler = handler;
     }
 
     /**
@@ -55,6 +58,9 @@ public class BluetoothConnector {
                         counter++;
                     } while (!socket.isConnected() && counter < deviceUuids.length);
                     connected = true;
+
+                    BluetoothReaderThread bluetoothReaderThread = new BluetoothReaderThread(socket, handler);
+                    bluetoothReaderThread.start();
 
                     outputStream = socket.getOutputStream();
                     inputStream = socket.getInputStream();
@@ -123,9 +129,9 @@ public class BluetoothConnector {
         return new String(message);
     }
 
-    public static BluetoothConnector create(BluetoothAdapter bluetoothAdapter, BluetoothDevice device) {
+    public static BluetoothConnector create(BluetoothAdapter bluetoothAdapter, BluetoothDevice device, Handler handler) {
         if (instance == null) {
-            instance = new BluetoothConnector(bluetoothAdapter, device);;
+            instance = new BluetoothConnector(bluetoothAdapter, device, handler);
         }
         return instance;
     }

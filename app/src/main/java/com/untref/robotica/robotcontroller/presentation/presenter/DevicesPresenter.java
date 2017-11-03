@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 
 import com.untref.robotica.robotcontroller.core.interactor.DevicesInteractor;

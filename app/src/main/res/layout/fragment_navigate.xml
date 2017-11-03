@@ -6,57 +6,77 @@
     android:orientation="vertical"
     >
 
-  <com.untref.robotica.robotcontroller.presentation.view.widget.ShadowFrameLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="@color/light_grey">
-
-    <LinearLayout
+    <com.untref.robotica.robotcontroller.presentation.view.widget.ShadowFrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?actionBarSize"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:background="@color/light_grey">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal">
+            android:layout_marginTop="?actionBarSize"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btn_stop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_stop" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
 
-            <Button
-                android:id="@+id/btn_navigate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_navigate" />
+                <Button
+                    android:id="@+id/btn_stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_stop" />
+
+                <Button
+                    android:id="@+id/btn_navigate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_navigate" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/log_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:enabled="true"
+                    android:scrollbars="vertical"
+                    android:textColor="@android:color/white" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_disconnect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/text_disconnect" />
+            </LinearLayout>
+
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="6"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/btn_disconnect"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/text_disconnect" />
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-  </com.untref.robotica.robotcontroller.presentation.view.widget.ShadowFrameLayout>
+    </com.untref.robotica.robotcontroller.presentation.view.widget.ShadowFrameLayout>
 
 </LinearLayout>

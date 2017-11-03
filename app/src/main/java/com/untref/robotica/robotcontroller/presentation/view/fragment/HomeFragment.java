@@ -19,6 +19,7 @@ import com.untref.robotica.robotcontroller.core.interactor.HomeInteractor;
 import com.untref.robotica.robotcontroller.presentation.presenter.HomePresenter;
 import com.untref.robotica.robotcontroller.presentation.view.activity.DevicesActivity;
 import com.untref.robotica.robotcontroller.presentation.view.activity.HomeActivity;
+import com.untref.robotica.robotcontroller.core.provider.Provider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,7 +43,8 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         homePresenter = new HomePresenter(
-                new HomeInteractor(new BluetoothClient(BluetoothAdapter.getDefaultAdapter())));
+                new HomeInteractor(new BluetoothClient(BluetoothAdapter.getDefaultAdapter(),
+                        Provider.provideBluetoothReaderPublishSubject())));
         homePresenter.setView(this);
     }
 

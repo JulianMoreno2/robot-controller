@@ -1,0 +1,101 @@
+package com.untref.robotica.robotcontroller.core.bluetoothclient.socket;
+
+import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class BluetoothReaderThread extends Thread {
+
+    private final InputStream inputStream;
+    private final Handler readHandler;
+
+    private static final String TAG = "DEVICE";
+    private static final char DELIMITER = '\n';
+    private String rx_buffer = "";
+
+    public BluetoothReaderThread(BluetoothSocket socket, Handler handler) {
+        InputStream tmpIn = null;
+        this.readHandler = handler;
+
+        // Get the BluetoothSocket input and output streams
+        try {
+            tmpIn = socket.getInputStream();
+        } catch (IOException e) {
+            Log.e(TAG, "temp sockets not created", e);
+        }
+
+        inputStream = tmpIn;
+    }
+
+    public void run() {
+        // Entry point when thread.start() is called.
+        while (!this.isInterrupted()) {
+
+            if ((inputStream == null)) {
+                Log.e(TAG, "Lost bluetooth connection!");
+                break;
+            }
+
+            String s = read();
+            if (s.length() > 0)
+                rx_buffer += s;
+
+            parseMessages();
+        }
+    }
+
+    private String read() {
+        //Return data read from the socket, or a blank string.
+        String s = "";
+
+        try {
+            if (inputStream.available() > 0) {
+
+                byte[] inBuffer = new byte[1024];
+                int bytesRead = inputStream.read(inBuffer);
+
+                s = new String(inBuffer, "ASCII");
+                s = s.substring(0, bytesRead);
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Read failed!", e);
+        }
+
+        return s;
+    }
+
+    private void parseMessages() {
+
+        // Find the first delimiter in the buffer
+        int inx = rx_buffer.indexOf(DELIMITER);
+
+        // If there is none, exit
+        if (inx == -1)
+            return;
+
+        // Get the complete message
+        String s = rx_buffer.substring(0, inx);
+
+        // Remove the message from the buffer
+        rx_buffer = rx_buffer.substring(inx + 1);
+
+        // Send to read handler
+        sendToReadHandler(s);
+
+        // Look for more complete messages
+        parseMessages();
+    }
+
+    private void sendToReadHandler(String s) {
+        //Pass a message to the read handler.
+        Message msg = Message.obtain();
+        msg.obj = s;
+        readHandler.sendMessage(msg);
+        Log.i(TAG, "[RECV] " + s);
+    }
+}
