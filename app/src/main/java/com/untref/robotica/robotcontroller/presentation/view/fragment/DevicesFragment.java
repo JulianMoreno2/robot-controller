@@ -1,6 +1,5 @@
 package com.untref.robotica.robotcontroller.presentation.view.fragment;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
@@ -16,10 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.untref.robotica.robotcontroller.R;
-import com.untref.robotica.robotcontroller.core.bluetoothclient.BluetoothClient;
 import com.untref.robotica.robotcontroller.core.interactor.DevicesInteractor;
-import com.untref.robotica.robotcontroller.core.repository.DevicesRepository;
 import com.untref.robotica.robotcontroller.core.provider.Provider;
+import com.untref.robotica.robotcontroller.core.repository.DevicesRepository;
 import com.untref.robotica.robotcontroller.presentation.presenter.DevicesPresenter;
 import com.untref.robotica.robotcontroller.presentation.view.activity.NavigateActivity;
 import com.untref.robotica.robotcontroller.presentation.view.adapter.DevicesAdapter;
@@ -48,8 +46,7 @@ public class DevicesFragment extends Fragment implements DevicesPresenter.View {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         devicesPresenter = new DevicesPresenter(getContext(),
-                new DevicesInteractor(new BluetoothClient(BluetoothAdapter.getDefaultAdapter(),
-                        Provider.provideBluetoothReaderPublishSubject()),
+                new DevicesInteractor(Provider.provideBluetoothClient(),
                 new DevicesRepository()));
         devicesPresenter.setView(this);
         devicesPresenter.onStartDiscovery();

@@ -110,7 +110,6 @@ public class BluetoothConnector {
     public void send(String message) {
         try {
             outputStream.write(message.getBytes());
-
         } catch (IOException e) {
             e.printStackTrace();
         }

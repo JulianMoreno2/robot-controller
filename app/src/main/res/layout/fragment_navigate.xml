@@ -54,7 +54,7 @@
                     android:clickable="false"
                     android:enabled="true"
                     android:scrollbars="vertical"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/black" />
 
             </LinearLayout>
 

@@ -1,6 +1,5 @@
 package com.untref.robotica.robotcontroller.presentation.view.fragment;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,10 +14,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.untref.robotica.robotcontroller.R;
-import com.untref.robotica.robotcontroller.core.bluetoothclient.BluetoothClient;
 import com.untref.robotica.robotcontroller.core.interactor.NavigateInteractor;
-import com.untref.robotica.robotcontroller.presentation.presenter.NavigatePresenter;
 import com.untref.robotica.robotcontroller.core.provider.Provider;
+import com.untref.robotica.robotcontroller.presentation.presenter.NavigatePresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +26,7 @@ public class NavigateFragment extends Fragment implements NavigatePresenter.View
     public static final String INCOMMING_MESSAGES = "Incomming messages ...";
     @BindView(R.id.btn_navigate)
     Button btn_navigate;
-//    @BindView(R.id.log_textview)
+    @BindView(R.id.log_textview)
     TextView logTextView;
     @BindView(R.id.btn_stop)
     Button btn_stop;
@@ -44,8 +42,7 @@ public class NavigateFragment extends Fragment implements NavigatePresenter.View
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         navigatePresenter = new NavigatePresenter(new NavigateInteractor(
-                new BluetoothClient(BluetoothAdapter.getDefaultAdapter(),
-                        Provider.provideBluetoothReaderPublishSubject())),
+                Provider.provideBluetoothClient()),
                 Provider.provideBluetoothReaderPublishSubject());
         navigatePresenter.setView(this);
     }
@@ -66,9 +63,11 @@ public class NavigateFragment extends Fragment implements NavigatePresenter.View
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
         btn_navigate.setOnClickListener(v -> navigatePresenter.sendNavigate());
         btn_stop.setOnClickListener(v -> navigatePresenter.sendStop());
         btn_disconnect.setOnClickListener(v -> navigatePresenter.sendDisconnect());
+
         logTextView.setMovementMethod(new ScrollingMovementMethod());
         logTextView.setText(INCOMMING_MESSAGES);
         navigatePresenter.readFromBluetooth();
@@ -86,6 +85,7 @@ public class NavigateFragment extends Fragment implements NavigatePresenter.View
 
     @Override
     public void writeIncommingMessage(String message) {
+        this.logTextView.setText(message);
         this.logTextView.append(message);
     }
 
@@ -100,8 +100,5 @@ public class NavigateFragment extends Fragment implements NavigatePresenter.View
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)
                 .commit();
-
-//        transaction.replace(R.id.devices_fragment, fragment);
-  //      transaction.commit();
     }
 }

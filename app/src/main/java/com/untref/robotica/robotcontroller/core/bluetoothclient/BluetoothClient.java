@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -18,17 +17,14 @@ import com.untref.robotica.robotcontroller.presentation.view.activity.HomeActivi
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 
 public class BluetoothClient {
 
     private BluetoothAdapter bluetoothAdapter;
-    private PublishSubject publishSubject;
-    private BluetoothConnector bluetoothConnector;
-    private Handler handler;
+    private PublishSubject<String> publishSubject;
 
-    public BluetoothClient(BluetoothAdapter bluetoothAdapter, PublishSubject publishSubject) {
+    public BluetoothClient(BluetoothAdapter bluetoothAdapter, PublishSubject<String> publishSubject) {
         this.bluetoothAdapter = bluetoothAdapter;
         this.publishSubject = publishSubject;
     }
@@ -75,15 +71,13 @@ public class BluetoothClient {
     }
 
     public void connectToPairDevice(BluetoothDevice device) {
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message message) {
+        Handler handler = new Handler(message -> {
+            String s = (String) message.obj;
+            publishSubject.onNext(s);
+            return true;
+        });
 
-                String s = (String) message.obj;
-                publishSubject.onNext(s);
-            }
-        };
-        bluetoothConnector = BluetoothConnector.create(bluetoothAdapter, device, handler);
+        BluetoothConnector bluetoothConnector = BluetoothConnector.create(bluetoothAdapter, device, handler);
         bluetoothConnector.connect();
     }
 
@@ -104,9 +98,5 @@ public class BluetoothClient {
             instance.send(navigateMessage);
             instance.disconnect();
         }
-    }
-
-    public Disposable readIncommingMessages() {
-        return publishSubject.subscribe();
     }
 }

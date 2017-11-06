@@ -40,7 +40,13 @@ public class BluetoothReaderThread extends Thread {
                 break;
             }
 
-            String s = read();
+            String s;
+            try {
+                s = read();
+            } catch (IOException e) {
+                e.printStackTrace();
+                break;
+            }
             if (s.length() > 0)
                 rx_buffer += s;
 
@@ -48,11 +54,11 @@ public class BluetoothReaderThread extends Thread {
         }
     }
 
-    private String read() {
+    private String read() throws IOException {
         //Return data read from the socket, or a blank string.
         String s = "";
 
-        try {
+
             if (inputStream.available() > 0) {
 
                 byte[] inBuffer = new byte[1024];
@@ -61,10 +67,6 @@ public class BluetoothReaderThread extends Thread {
                 s = new String(inBuffer, "ASCII");
                 s = s.substring(0, bytesRead);
             }
-
-        } catch (Exception e) {
-            Log.e(TAG, "Read failed!", e);
-        }
 
         return s;
     }

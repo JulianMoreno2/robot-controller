@@ -4,7 +4,7 @@
   <!-- Base application theme. -->
   <style name="Theme.AppTheme.RobotController" parent="Base.Theme.Material.RobotController"/>
 
-  <style name="Base.Theme.Material.RobotController" parent="Theme.AppCompat.Light.NoActionBar">
+  <style name="Base.Theme.Material.RobotController" parent="Base.Theme.AppCompat.Light.DarkActionBar">
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorPrimary">@color/colorPrimary</item>
     <item name="colorAccent">@color/colorAccent</item>
