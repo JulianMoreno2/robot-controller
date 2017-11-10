@@ -77,8 +77,7 @@ public class BluetoothClient {
             return true;
         });
 
-        BluetoothConnector bluetoothConnector = BluetoothConnector.create(bluetoothAdapter, device, handler);
-        bluetoothConnector.connect();
+        BluetoothConnector.create(bluetoothAdapter, device, handler).connect();
     }
 
     public void sendToBluetoothSocket(String navigateMessage) {

@@ -85,7 +85,6 @@ public class NavigateFragment extends Fragment implements NavigatePresenter.View
 
     @Override
     public void writeIncommingMessage(String message) {
-        this.logTextView.setText(message);
         this.logTextView.append(message);
     }
 

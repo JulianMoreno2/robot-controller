@@ -17,18 +17,9 @@ public class BluetoothReaderThread extends Thread {
     private static final char DELIMITER = '\n';
     private String rx_buffer = "";
 
-    public BluetoothReaderThread(BluetoothSocket socket, Handler handler) {
-        InputStream tmpIn = null;
+    public BluetoothReaderThread(InputStream inputStream, Handler handler) {
+        this.inputStream = inputStream;
         this.readHandler = handler;
-
-        // Get the BluetoothSocket input and output streams
-        try {
-            tmpIn = socket.getInputStream();
-        } catch (IOException e) {
-            Log.e(TAG, "temp sockets not created", e);
-        }
-
-        inputStream = tmpIn;
     }
 
     public void run() {
@@ -58,15 +49,14 @@ public class BluetoothReaderThread extends Thread {
         //Return data read from the socket, or a blank string.
         String s = "";
 
+        //if (inputStream.available() > 0) {
 
-            if (inputStream.available() > 0) {
+            byte[] inBuffer = new byte[1024];
+            int bytesRead = inputStream.read(inBuffer);
 
-                byte[] inBuffer = new byte[1024];
-                int bytesRead = inputStream.read(inBuffer);
-
-                s = new String(inBuffer, "ASCII");
-                s = s.substring(0, bytesRead);
-            }
+            s = new String(inBuffer, "ASCII");
+            s = s.substring(0, bytesRead);
+        //}
 
         return s;
     }
