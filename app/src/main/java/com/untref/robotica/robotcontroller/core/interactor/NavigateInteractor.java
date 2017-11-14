@@ -33,4 +33,20 @@ public class NavigateInteractor {
     public void disconnect() {
         bluetoothClient.disconnectBluetooth(DISCONNECT);
     }
+
+    public void goToLeft() {
+    }
+
+
+    public void goToRight() {
+
+    }
+
+    public void goToBackward() {
+        bluetoothClient.sendToBluetoothSocket(BACKWARD_VEL_MED);
+    }
+
+    public void gotToForward() {
+        bluetoothClient.sendToBluetoothSocket(FORWARD_VEL_MED);
+    }
 }

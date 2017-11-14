@@ -9,4 +9,8 @@
     <string name="text_navigate">Navigate</string>
     <string name="text_stop">Stop</string>
     <string name="text_disconnect">Disconnect</string>
+    <string name="text_left">Left</string>
+    <string name="text_right">Right</string>
+    <string name="text_forward">Forward</string>
+    <string name="text_backward">Backward</string>
 </resources>
