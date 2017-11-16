@@ -1,5 +1,6 @@
 package com.untref.robotica.robotcontroller.presentation.presenter;
 
+import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
 import com.untref.robotica.robotcontroller.core.interactor.NavigateInteractor;
@@ -37,20 +38,16 @@ public class NavigatePresenter extends Presenter<NavigatePresenter.View> {
         });
     }
 
-    public void sendGoToLeft() {
-        navigateInteractor.goToLeft();
-    }
-
-    public void sendGoToRight() {
-        navigateInteractor.goToRight();
-    }
-
     public void sendGoToBackward() {
         navigateInteractor.goToBackward();
     }
 
     public void sendGoToForward() {
         navigateInteractor.gotToForward();
+    }
+
+    public void connectToIncommingBluetoothDevice(BluetoothDevice bluetoothDevice) {
+        navigateInteractor.connectToPairDevice(bluetoothDevice);
     }
 
     public interface View extends Presenter.View {

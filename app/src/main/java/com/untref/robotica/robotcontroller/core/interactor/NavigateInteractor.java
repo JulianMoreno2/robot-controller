@@ -1,5 +1,7 @@
 package com.untref.robotica.robotcontroller.core.interactor;
 
+import android.bluetooth.BluetoothDevice;
+
 import com.untref.robotica.robotcontroller.core.bluetoothclient.BluetoothClient;
 
 public class NavigateInteractor {
@@ -34,19 +36,15 @@ public class NavigateInteractor {
         bluetoothClient.disconnectBluetooth(DISCONNECT);
     }
 
-    public void goToLeft() {
-    }
-
-
-    public void goToRight() {
-
-    }
-
     public void goToBackward() {
         bluetoothClient.sendToBluetoothSocket(BACKWARD_VEL_MED);
     }
 
     public void gotToForward() {
         bluetoothClient.sendToBluetoothSocket(FORWARD_VEL_MED);
+    }
+
+    public void connectToPairDevice(BluetoothDevice bluetoothDevice) {
+        bluetoothClient.connectToPairDevice(bluetoothDevice);
     }
 }

@@ -1,6 +1,8 @@
 package com.untref.robotica.robotcontroller.presentation.view.fragment;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,10 +34,6 @@ public class NavigateFragment extends Fragment implements NavigatePresenter.View
     Button btn_stop;
     @BindView(R.id.btn_disconnect)
     Button btn_disconnect;
-    @BindView(R.id.btn_left)
-    Button btn_left;
-    @BindView(R.id.btn_right)
-    Button btn_right;
     @BindView(R.id.btn_backward)
     Button btn_backward;
     @BindView(R.id.btn_forward)
@@ -76,15 +74,21 @@ public class NavigateFragment extends Fragment implements NavigatePresenter.View
         btn_navigate.setOnClickListener(v -> navigatePresenter.sendNavigate());
         btn_stop.setOnClickListener(v -> navigatePresenter.sendStop());
         btn_disconnect.setOnClickListener(v -> navigatePresenter.sendDisconnect());
-        btn_left.setOnClickListener(v -> navigatePresenter.sendGoToLeft());
-        btn_right.setOnClickListener(v -> navigatePresenter.sendGoToRight());
         btn_backward.setOnClickListener(v -> navigatePresenter.sendGoToBackward());
         btn_forward.setOnClickListener(v -> navigatePresenter.sendGoToForward());
-
 
         logTextView.setMovementMethod(new ScrollingMovementMethod());
         logTextView.setText(INCOMMING_MESSAGES);
         navigatePresenter.readFromBluetooth();
+
+
+        String key = "BLUETOOTH_DEVICE";
+        Intent intent = getActivity().getIntent();
+        if (intent.hasExtra(key)) {
+            navigatePresenter.connectToIncommingBluetoothDevice(
+                    (BluetoothDevice) intent.getBundleExtra(key).get(key)
+            );
+        }
     }
 
     @Override

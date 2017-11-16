@@ -59,7 +59,6 @@ public class BluetoothConnector {
                     } while (!socket.isConnected() && counter < deviceUuids.length);
                     connected = true;
 
-
                     outputStream = socket.getOutputStream();
                     inputStream = socket.getInputStream();
                     new BluetoothReaderThread(inputStream, handler).start();
