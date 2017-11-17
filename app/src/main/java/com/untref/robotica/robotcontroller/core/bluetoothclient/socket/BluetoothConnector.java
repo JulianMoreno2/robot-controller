@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.ParcelUuid;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.IOException;
@@ -108,6 +109,7 @@ public class BluetoothConnector {
     public void send(String message) {
         try {
             outputStream.write(message.getBytes());
+            SystemClock.sleep(200);
         } catch (IOException e) {
             e.printStackTrace();
         }

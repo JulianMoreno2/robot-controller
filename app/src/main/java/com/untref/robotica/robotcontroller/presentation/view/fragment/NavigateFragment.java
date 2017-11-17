@@ -80,15 +80,6 @@ public class NavigateFragment extends Fragment implements NavigatePresenter.View
         logTextView.setMovementMethod(new ScrollingMovementMethod());
         logTextView.setText(INCOMMING_MESSAGES);
         navigatePresenter.readFromBluetooth();
-
-
-        String key = "BLUETOOTH_DEVICE";
-        Intent intent = getActivity().getIntent();
-        if (intent.hasExtra(key)) {
-            navigatePresenter.connectToIncommingBluetoothDevice(
-                    (BluetoothDevice) intent.getBundleExtra(key).get(key)
-            );
-        }
     }
 
     @Override

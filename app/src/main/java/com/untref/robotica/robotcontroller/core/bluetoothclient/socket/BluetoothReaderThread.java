@@ -1,6 +1,5 @@
 package com.untref.robotica.robotcontroller.core.bluetoothclient.socket;
 
-import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -49,14 +48,14 @@ public class BluetoothReaderThread extends Thread {
         //Return data read from the socket, or a blank string.
         String s = "";
 
-        //if (inputStream.available() > 0) {
+        if (inputStream.available() > 0) {
 
             byte[] inBuffer = new byte[1024];
             int bytesRead = inputStream.read(inBuffer);
 
             s = new String(inBuffer, "ASCII");
             s = s.substring(0, bytesRead);
-        //}
+        }
 
         return s;
     }
@@ -86,7 +85,7 @@ public class BluetoothReaderThread extends Thread {
     private void sendToReadHandler(String s) {
         //Pass a message to the read handler.
         Message msg = Message.obtain();
-        msg.obj = s;
+        msg.obj = s + "\r\n";
         readHandler.sendMessage(msg);
         Log.i(TAG, "[RECV] " + s);
     }

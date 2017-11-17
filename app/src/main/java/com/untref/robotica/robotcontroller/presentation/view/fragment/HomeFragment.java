@@ -1,6 +1,5 @@
 package com.untref.robotica.robotcontroller.presentation.view.fragment;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,9 +18,6 @@ import com.untref.robotica.robotcontroller.core.provider.Provider;
 import com.untref.robotica.robotcontroller.presentation.presenter.HomePresenter;
 import com.untref.robotica.robotcontroller.presentation.view.activity.DevicesActivity;
 import com.untref.robotica.robotcontroller.presentation.view.activity.HomeActivity;
-import com.untref.robotica.robotcontroller.presentation.view.activity.NavigateActivity;
-
-import java.util.function.Consumer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,9 +40,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        homePresenter = new HomePresenter(
-                new HomeInteractor(Provider.provideBluetoothClient()),
-                Provider.provideReceiverBluetoothSocketConnectionPublishSubject());
+        homePresenter = new HomePresenter(new HomeInteractor(Provider.provideBluetoothClient()));
         homePresenter.setView(this);
     }
 
@@ -63,23 +57,13 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
         ButterKnife.bind(this, view);
 
         btn_enable.setOnClickListener(v -> {
-            if(homePresenter.onEnableBluetooth(getContext(), (HomeActivity) getActivity())){
-                homePresenter.onReceiveConnectionBluetoothSocket(goToNavigateFragment());
-            }
+            homePresenter.onEnableBluetooth(getContext(), (HomeActivity) getActivity());
         });
 
         btn_scan.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), DevicesActivity.class);
             startActivity(intent);
         });
-    }
-
-    private Consumer<BluetoothDevice> goToNavigateFragment() {
-        return bluetoothDevice -> {
-            Intent intent = new Intent(getActivity(), NavigateActivity.class);
-            intent.putExtra("BLUETOOTH_DEVICE", bluetoothDevice);
-            startActivity(intent);
-        };
     }
 
     @Override
