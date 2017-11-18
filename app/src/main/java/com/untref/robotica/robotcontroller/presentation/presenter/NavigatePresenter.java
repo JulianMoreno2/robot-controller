@@ -46,10 +46,6 @@ public class NavigatePresenter extends Presenter<NavigatePresenter.View> {
         navigateInteractor.gotToForward();
     }
 
-    public void connectToIncommingBluetoothDevice(BluetoothDevice bluetoothDevice) {
-        navigateInteractor.connectToPairDevice(bluetoothDevice);
-    }
-
     public interface View extends Presenter.View {
         void disableNavigate();
 

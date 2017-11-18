@@ -11,6 +11,8 @@
     <color name="background">#FFF5F5F5</color>
 
     <color name="background_black">#45000000</color>
+    <color name="black">#111111</color>
+    <color name="blue_shadow">#0288d1</color>
 
     <color name="text_primary_dark">#ffffffff</color> <!-- 87% -->
     <color name="text_secondary_dark">#ffffffff</color> <!-- 54% -->

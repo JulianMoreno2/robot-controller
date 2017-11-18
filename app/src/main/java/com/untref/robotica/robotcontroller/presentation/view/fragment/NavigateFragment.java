@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 
 public class NavigateFragment extends Fragment implements NavigatePresenter.View {
 
-    public static final String INCOMMING_MESSAGES = "Incomming messages ...";
+    public static final String INCOMMING_MESSAGES = "Incomming messages ...\n";
     @BindView(R.id.btn_navigate)
     Button btn_navigate;
     @BindView(R.id.log_textview)
@@ -78,7 +78,7 @@ public class NavigateFragment extends Fragment implements NavigatePresenter.View
         btn_forward.setOnClickListener(v -> navigatePresenter.sendGoToForward());
 
         logTextView.setMovementMethod(new ScrollingMovementMethod());
-        logTextView.setText(INCOMMING_MESSAGES);
+        logTextView.append(INCOMMING_MESSAGES);
         navigatePresenter.readFromBluetooth();
     }
 

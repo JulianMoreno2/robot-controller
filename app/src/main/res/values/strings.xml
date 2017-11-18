@@ -13,4 +13,5 @@
     <string name="text_right">Right</string>
     <string name="text_forward">Forward</string>
     <string name="text_backward">Backward</string>
+    <string name="text_title">Robot Controller</string>
 </resources>

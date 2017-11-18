@@ -16,5 +16,8 @@
   <dimen name="size_title">22sp</dimen>
   <dimen name="size_subtitle">16sp</dimen>
 
+  <!-- Text Console -->
+  <dimen name="size_text_console">14sp</dimen>
+  <dimen name="max_lines">8</dimen>
 
 </resources>
