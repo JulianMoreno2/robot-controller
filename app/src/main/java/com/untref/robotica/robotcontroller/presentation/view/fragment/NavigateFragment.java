@@ -1,6 +1,5 @@
 package com.untref.robotica.robotcontroller.presentation.view.fragment;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +18,7 @@ import com.untref.robotica.robotcontroller.R;
 import com.untref.robotica.robotcontroller.core.interactor.NavigateInteractor;
 import com.untref.robotica.robotcontroller.core.provider.Provider;
 import com.untref.robotica.robotcontroller.presentation.presenter.NavigatePresenter;
+import com.untref.robotica.robotcontroller.presentation.view.activity.HomeActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -98,15 +98,8 @@ public class NavigateFragment extends Fragment implements NavigatePresenter.View
     }
 
     @Override
-    public void goToDevicesFragment() {
-        Fragment fragment = new DevicesFragment();
-
-        FragmentManager fm = getChildFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction
-                .add(R.id.devices_fragment, fragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit();
+    public void renderHomeActivity() {
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        startActivity(intent);
     }
 }

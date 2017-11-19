@@ -43,26 +43,32 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.DevicesV
         holder.textViewDeviceName.setText(device.getName());
         holder.textViewDeviceAddress.setText(device.getAddress());
 
+        if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
+            showPairDevice(holder, "Device already paired");
+        }
+
         holder.btnPair.setOnClickListener(v -> {
             Log.d("DEVICE", "Device state: " + device.getBondState());
             if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
-                //FIXME: El estado de device no cambia por lo que nunca se desvincula
                 Log.d("DEVICE", "Unpairing device");
                 holder.btnPair.setText("Pair");
                 unpairDevice(device);
             } else {
-                Log.d("DEVICE", "Pairing device");
-                holder.btnPair.setText("Unpair");
                 pairDevice(device);
-                holder.btnConnect.setVisibility(View.VISIBLE);
-                holder.btnConnect.setEnabled(true);
+                showPairDevice(holder, "Pairing device");
             }
         });
 
         holder.btnConnect.setOnClickListener(v -> {
-                devicesPresenter.connectToPairDevice(holder.device);
-                devicesPresenter.getView().renderNavigate();
+            devicesPresenter.connectToPairDevice(holder.device);
+            devicesPresenter.getView().renderNavigateActivity();
         });
+    }
+
+    private void showPairDevice(DevicesViewHolder holder, String msg) {
+        Log.d("DEVICE", msg);
+        holder.btnPair.setText("Unpair");
+        holder.btnConnect.setEnabled(true);
     }
 
     private void pairDevice(BluetoothDevice device) {

@@ -17,7 +17,7 @@ public class DevicesRepository {
         devices.add(device);
     }
 
-    public List<BluetoothDevice> getDevices(){
+    public List<BluetoothDevice> getDevices() {
         return devices;
     }
 }

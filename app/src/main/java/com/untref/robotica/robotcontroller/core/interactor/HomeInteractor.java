@@ -22,4 +22,7 @@ public class HomeInteractor {
         return !bluetoothClient.disable();
     }
 
+    public boolean isBluetoothEnable() {
+        return bluetoothClient.isEnabled();
+    }
 }

@@ -15,11 +15,15 @@ public class HomePresenter extends Presenter<HomePresenter.View> {
 
     public void onEnableBluetooth(Context context, HomeActivity homeActivity) {
         boolean enableBluetooth = interactor.enableBluetooth(context, homeActivity);
-        if(enableBluetooth) {
+        if (enableBluetooth) {
             getView().enableBluetooth();
         } else {
             getView().disableBluetooth();
         }
+    }
+
+    public boolean isBluetoothEnable() {
+        return interactor.isBluetoothEnable();
     }
 
     public interface View extends Presenter.View {

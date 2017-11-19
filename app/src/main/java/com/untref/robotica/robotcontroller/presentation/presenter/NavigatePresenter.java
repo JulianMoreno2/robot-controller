@@ -1,6 +1,5 @@
 package com.untref.robotica.robotcontroller.presentation.presenter;
 
-import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
 import com.untref.robotica.robotcontroller.core.interactor.NavigateInteractor;
@@ -28,12 +27,12 @@ public class NavigatePresenter extends Presenter<NavigatePresenter.View> {
 
     public void sendDisconnect() {
         navigateInteractor.disconnect();
-        getView().goToDevicesFragment();
+        getView().renderHomeActivity();
     }
 
     public void readFromBluetooth() {
         subject.subscribe(message -> {
-            Log.d("DEVICE", "Message -> "+ message);
+            Log.d("DEVICE", "Message -> " + message);
             getView().writeIncommingMessage(message);
         });
     }
@@ -49,7 +48,7 @@ public class NavigatePresenter extends Presenter<NavigatePresenter.View> {
     public interface View extends Presenter.View {
         void disableNavigate();
 
-        void goToDevicesFragment();
+        void renderHomeActivity();
 
         void writeIncommingMessage(String message);
     }

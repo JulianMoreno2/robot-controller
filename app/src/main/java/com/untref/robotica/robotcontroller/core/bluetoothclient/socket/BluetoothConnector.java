@@ -98,8 +98,6 @@ public class BluetoothConnector {
                     this.socket.close();
                 }
 
-                this.bluetoothAdapter.disable();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -113,19 +111,6 @@ public class BluetoothConnector {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public String receive() throws IOException {
-
-        byte[] message = new byte[5];
-
-        for (int i = 0; i < 5; i++) {
-            byte[] bytes = new byte[1];
-            inputStream.read(bytes);
-            message[i] = bytes[0];
-        }
-
-        return new String(message);
     }
 
     public static BluetoothConnector create(BluetoothAdapter bluetoothAdapter, BluetoothDevice device, Handler handler) {

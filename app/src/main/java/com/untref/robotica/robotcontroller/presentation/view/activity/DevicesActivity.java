@@ -1,7 +1,8 @@
 package com.untref.robotica.robotcontroller.presentation.view.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
 import com.untref.robotica.robotcontroller.R;
 
 public class DevicesActivity extends AppCompatActivity {

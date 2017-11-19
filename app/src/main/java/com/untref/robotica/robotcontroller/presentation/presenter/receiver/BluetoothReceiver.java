@@ -10,6 +10,8 @@ import android.util.Log;
 import com.untref.robotica.robotcontroller.presentation.presenter.DevicesPresenter;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BluetoothReceiver extends BroadcastReceiver {
 
@@ -32,7 +34,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
             List<BluetoothDevice> devices = devicesPresenter.getDevices();
             if (!devices.isEmpty()) {
                 devicesPresenter.getView().hideLoading();
-                devices.addAll(devicesPresenter.getBoundedDevices());
                 devicesPresenter.getView().renderDevices(devices);
             } else {
                 devicesPresenter.getView().showDevicesNotFoundMessage();

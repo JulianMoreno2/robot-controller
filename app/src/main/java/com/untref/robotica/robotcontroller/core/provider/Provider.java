@@ -14,7 +14,7 @@ public class Provider {
     private static PublishSubject<BluetoothDevice> receiverBluetoothSocketConnectionPublishSubject;
 
     public static PublishSubject<String> provideBluetoothReaderPublishSubject() {
-        if(bluetoothReaderPublishSubject != null) {
+        if (bluetoothReaderPublishSubject != null) {
             return bluetoothReaderPublishSubject;
         }
         bluetoothReaderPublishSubject = PublishSubject.create();
@@ -22,7 +22,7 @@ public class Provider {
     }
 
     public static BluetoothClient provideBluetoothClient() {
-        if(bluetoothClient != null) {
+        if (bluetoothClient != null) {
             return bluetoothClient;
         }
         bluetoothClient = new BluetoothClient(BluetoothAdapter.getDefaultAdapter(), provideBluetoothReaderPublishSubject());
@@ -30,7 +30,7 @@ public class Provider {
     }
 
     public static PublishSubject<BluetoothDevice> provideReceiverBluetoothSocketConnectionPublishSubject() {
-        if(bluetoothReaderPublishSubject != null) {
+        if (bluetoothReaderPublishSubject != null) {
             return receiverBluetoothSocketConnectionPublishSubject;
         }
         receiverBluetoothSocketConnectionPublishSubject = PublishSubject.create();

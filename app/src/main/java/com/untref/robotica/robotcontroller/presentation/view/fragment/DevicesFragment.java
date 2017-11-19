@@ -47,7 +47,7 @@ public class DevicesFragment extends Fragment implements DevicesPresenter.View {
         super.onCreate(savedInstanceState);
         devicesPresenter = new DevicesPresenter(getContext(),
                 new DevicesInteractor(Provider.provideBluetoothClient(),
-                new DevicesRepository()));
+                        new DevicesRepository()));
         devicesPresenter.setView(this);
         devicesPresenter.onStartDiscovery();
     }
@@ -124,7 +124,7 @@ public class DevicesFragment extends Fragment implements DevicesPresenter.View {
     }
 
     @Override
-    public void renderNavigate() {
+    public void renderNavigateActivity() {
         Intent intent = new Intent(getActivity(), NavigateActivity.class);
         startActivity(intent);
     }

@@ -56,9 +56,14 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        btn_enable.setOnClickListener(v -> {
-            homePresenter.onEnableBluetooth(getContext(), (HomeActivity) getActivity());
-        });
+        if (homePresenter.isBluetoothEnable()) {
+            enableBluetooth();
+        } else {
+            disableBluetooth();
+        }
+
+        btn_enable.setOnClickListener(v ->
+                homePresenter.onEnableBluetooth(getContext(), (HomeActivity) getActivity()));
 
         btn_scan.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), DevicesActivity.class);

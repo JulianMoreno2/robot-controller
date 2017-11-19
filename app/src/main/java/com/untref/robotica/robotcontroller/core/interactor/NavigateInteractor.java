@@ -44,7 +44,4 @@ public class NavigateInteractor {
         bluetoothClient.sendToBluetoothSocket(FORWARD_VEL_MED);
     }
 
-    public void connectToPairDevice(BluetoothDevice bluetoothDevice) {
-        bluetoothClient.connectToPairDevice(bluetoothDevice);
-    }
 }
