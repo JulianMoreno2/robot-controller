@@ -38,24 +38,25 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.DevicesV
 
     @Override
     public void onBindViewHolder(DevicesViewHolder holder, int position) {
+
         BluetoothDevice device = devices.get(position);
         holder.device = device;
         holder.textViewDeviceName.setText(device.getName());
         holder.textViewDeviceAddress.setText(device.getAddress());
 
         if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
-            showPairDevice(holder, "Device already paired");
+            showStatusDevice(holder, "Device already paired", "UnPair", true);
         }
 
         holder.btnPair.setOnClickListener(v -> {
             Log.d("DEVICE", "Device state: " + device.getBondState());
+
             if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
-                Log.d("DEVICE", "Unpairing device");
-                holder.btnPair.setText("Pair");
-                unpairDevice(device);
+                invokeBluetoothMethod(device, "removeBond");
+                showStatusDevice(holder, "Unpairing device", "Pair", false);
             } else {
-                pairDevice(device);
-                showPairDevice(holder, "Pairing device");
+                invokeBluetoothMethod(device, "createBond");
+                showStatusDevice(holder, "Pairing device", "UnPair", true);
             }
         });
 
@@ -65,24 +66,15 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.DevicesV
         });
     }
 
-    private void showPairDevice(DevicesViewHolder holder, String msg) {
+    private void showStatusDevice(DevicesViewHolder holder, String msg, String btnText, boolean enableConnect) {
         Log.d("DEVICE", msg);
-        holder.btnPair.setText("Unpair");
-        holder.btnConnect.setEnabled(true);
+        holder.btnPair.setText(btnText);
+        holder.btnConnect.setEnabled(enableConnect);
     }
 
-    private void pairDevice(BluetoothDevice device) {
+    private void invokeBluetoothMethod(BluetoothDevice device, String action) {
         try {
-            Method method = device.getClass().getMethod("createBond", (Class[]) null);
-            method.invoke(device, (Object[]) null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void unpairDevice(BluetoothDevice device) {
-        try {
-            Method method = device.getClass().getMethod("removeBond", (Class[]) null);
+            Method method = device.getClass().getMethod(action, (Class[]) null);
             method.invoke(device, (Object[]) null);
 
         } catch (Exception e) {
